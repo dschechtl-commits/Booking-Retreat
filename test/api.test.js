@@ -50,18 +50,24 @@ test('host plaatst retreat, gast boekt, capaciteit wordt bewaakt', async () => {
 
   const created = await host('/api/retreats', { method: 'POST', body: {
     title: 'Yoga in Hoi An', type: 'Yoga', region: 'Azië', country: 'Vietnam', city: 'Hoi An',
-    description: 'Een prachtige retreat tussen de rijstvelden met dagelijks yoga.', pricePerPerson: 500,
+    description: 'Een prachtige retreat tussen de rijstvelden met dagelijks yoga.',
+    packages: [{ name: 'Gedeeld', price: 500 }, { name: 'Privé', price: 800 }], depositPercent: 20,
+    cancellation: 'flexibel', level: 'Beginner', languages: ['Engels'], diets: ['Veganistisch'], instantBooking: true,
     nights: 5, capacity: 3, amenities: 'Ontbijt, Yogamat', startDates: [date],
   } });
   assert.equal(created.status, 200, JSON.stringify(created.data));
   const r = created.data.retreat;
   assert.deepEqual(r.amenities, ['Ontbijt', 'Yogamat']);
+  assert.equal(r.pricePerPerson, 500);
 
   assert.equal((await host('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 1 } })).status, 400);
-  const b1 = await guest('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 2 } });
+  const b1 = await guest('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 2, packageName: 'Gedeeld' } });
   assert.equal(b1.status, 200);
   assert.equal(b1.data.booking.totalPrice, 1000);
-  assert.equal((await guest('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 2 } })).status, 409);
+  assert.equal(b1.data.booking.deposit, 200);
+  assert.equal(b1.data.booking.status, 'bevestigd');
+  assert.equal((await guest('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 2, packageName: 'Gedeeld' } })).status, 409);
+  assert.equal((await guest('/api/bookings', { method: 'POST', body: { retreatId: r.id, startDate: date, guests: 1, packageName: 'Bestaat niet' } })).status, 400);
 
   const detail = await guest('/api/retreats/' + r.id);
   assert.equal(detail.data.retreat.dates[0].available, 1);
@@ -73,10 +79,54 @@ test('host plaatst retreat, gast boekt, capaciteit wordt bewaakt', async () => {
   assert.equal((await host('/api/retreats/' + r.id, { method: 'DELETE' })).status, 409);
   assert.equal((await guest('/api/retreats/' + r.id, { method: 'DELETE' })).status, 403);
 
-  assert.equal((await guest(`/api/bookings/${b1.data.booking.id}/cancel`, { method: 'POST' })).status, 200);
+  // review + favoriet
+  assert.equal((await host(`/api/retreats/${r.id}/reviews`, { method: 'POST', body: { rating: 5, text: 'Zelf beoordelen?' } })).status, 403);
+  assert.equal((await guest(`/api/retreats/${r.id}/reviews`, { method: 'POST', body: { rating: 4, text: 'Heerlijke week gehad!' } })).status, 200);
+  assert.equal((await guest(`/api/retreats/${r.id}/reviews`, { method: 'POST', body: { rating: 4, text: 'Nog een keer...' } })).status, 409);
+  const withReview = await guest('/api/retreats/' + r.id);
+  assert.equal(withReview.data.retreat.reviews, 1);
+  assert.equal(withReview.data.retreat.rating, 4);
+  assert.equal(withReview.data.retreat.reviewList[0].userName, 'Gast');
+  const fav = await guest('/api/favorites/' + r.id, { method: 'POST' });
+  assert.deepEqual(fav.data.favorites, [r.id]);
+
+  const cancel = await guest(`/api/bookings/${b1.data.booking.id}/cancel`, { method: 'POST' });
+  assert.equal(cancel.status, 200);
+  assert.equal(cancel.data.booking.refund, 200); // flexibel en >14 dagen vooraf
   const after = await guest('/api/retreats/' + r.id);
   assert.equal(after.data.retreat.dates[0].available, 3);
   assert.equal((await host('/api/retreats/' + r.id, { method: 'DELETE' })).status, 200);
+});
+
+test('boeken op aanvraag: host accepteert of wijst af', async () => {
+  const guest = client();
+  await guest('/api/auth/register', { method: 'POST', body: { name: 'Aanvrager', email: 'a@x.nl', password: 'geheim123' } });
+  const madeRetreat = (await guest('/api/retreats/r_chiangmai')).data.retreat; // instantBooking: false
+  const date = madeRetreat.dates[0].date;
+  const req1 = await guest('/api/bookings', { method: 'POST', body: { retreatId: 'r_chiangmai', startDate: date, guests: 1 } });
+  assert.equal(req1.data.booking.status, 'aangevraagd');
+  const req2 = await guest('/api/bookings', { method: 'POST', body: { retreatId: 'r_chiangmai', startDate: date, guests: 2 } });
+  assert.equal((await guest('/api/retreats/r_chiangmai')).data.retreat.dates[0].available, madeRetreat.capacity - 3);
+
+  const host = client();
+  await host('/api/auth/login', { method: 'POST', body: { email: 'made@demo.nl', password: 'demo1234' } });
+  assert.equal((await guest(`/api/bookings/${req1.data.booking.id}/accept`, { method: 'POST' })).status, 403);
+  assert.equal((await host(`/api/bookings/${req1.data.booking.id}/accept`, { method: 'POST' })).data.booking.status, 'bevestigd');
+  const declined = await host(`/api/bookings/${req2.data.booking.id}/decline`, { method: 'POST' });
+  assert.equal(declined.data.booking.status, 'afgewezen');
+  const listing = (await host('/api/me/listings')).data.listings.find((l) => l.id === 'r_chiangmai');
+  assert.equal(listing.pending, 0);
+  assert.equal(listing.revenue, 540);
+});
+
+test('extra filters', async () => {
+  const c = client();
+  const short = await c('/api/retreats?duration=1-3');
+  assert.ok(short.data.retreats.length && short.data.retreats.every((r) => r.nights <= 3));
+  const flex = await c('/api/retreats?flexible=1&instant=1');
+  assert.ok(flex.data.retreats.every((r) => r.cancellation === 'flexibel' && r.instantBooking));
+  const vegan = await c('/api/retreats?diet=Veganistisch&language=Nederlands');
+  assert.ok(vegan.data.retreats.every((r) => r.diets.includes('Veganistisch') && r.languages.includes('Nederlands')));
 });
 
 test('login en CSRF-check', async () => {

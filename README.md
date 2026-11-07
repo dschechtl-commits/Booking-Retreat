@@ -4,11 +4,20 @@ Een platform waar iedereen een retreatlocatie kan aanbieden en waar gasten retre
 
 ## Functies
 
-- **Ontdekken** – zoeken en filteren op regio (Europa/Azië), land, type (yoga, meditatie, detox, surf & yoga, …), maximale prijs en maand; sorteren op prijs, datum of populariteit.
-- **Boeken** – startdatum en aantal personen kiezen, live beschikbaarheid per datum, direct bevestigd, gratis annuleren via je account.
-- **Aanbieden** – elke gebruiker kan een retreat plaatsen (titel, land, plaats, beschrijving, prijs, nachten, capaciteit, inbegrepen, foto-URL, startdata), bewerken en verwijderen.
-- **Account** – overzicht van je boekingen en, als host, van je aanbod met gasten, berichten en omzet.
-- Accounts met veilig gehashte wachtwoorden (scrypt) en HttpOnly-sessiecookies.
+**Voor gasten**
+- **Zoeken en filteren** op regio (Europa/Azië), land, type retreat, maand, duur, maximale prijs, niveau, eten (vegetarisch, veganistisch, glutenvrij, biologisch), taal, gratis annuleren en direct boeken. Sorteren op aanbevolen, beoordeling, prijs, datum of nieuwste.
+- **Retreatpagina** met overzicht, dagprogramma, docent, accommodatie met kameropties, eten, annuleringsbeleid en betaling, en reviews.
+- **Reserveren met aanbetaling**: kies datum, kamer en aantal personen. Je ziet meteen het totaal, de aanbetaling en het restbedrag bij aankomst. De beschikbaarheid per datum is live.
+- **Verlanglijst** (♡) om retreats te bewaren.
+- **Reviews**: alleen gasten met een bevestigde boeking kunnen een review schrijven.
+- **Annuleren**: de terugbetaling van de aanbetaling volgt het beleid van de retreat (flexibel 14 dagen, gemiddeld 30 dagen, strikt geen terugbetaling).
+
+**Voor hosts (iedereen kan aanbieden)**
+- Een retreat plaatsen, bewerken en verwijderen, met kameropties en prijzen, startdata, capaciteit, aanbetalingspercentage, annuleringsbeleid, programma, docent, eten, talen en een foto-URL.
+- Kiezen tussen **direct boeken** (automatisch bevestigd) en **boeken op aanvraag** (de host accepteert of wijst af; bij afwijzen krijgt de gast de aanbetaling terug).
+- Een dashboard met boekingen, gastgegevens en berichten, omzet, score en openstaande aanvragen.
+
+Betalingen zijn nog niet gekoppeld: de aanbetaling wordt berekend en getoond, maar er wordt nog niets afgerekend.
 
 ## Starten
 
@@ -37,7 +46,7 @@ test/             tests (node:test)
 
 ## Volgende stappen voor productie
 
-- Online betalen (bijv. Stripe of Mollie) en bevestigingsmails
+- Echte betaling van de aanbetaling (bijv. Mollie of Stripe Connect met uitbetaling aan hosts) en bevestigingsmails
 - Echte database (PostgreSQL) in plaats van het JSON-bestand
-- Foto-uploads, reviews en berichten tussen gast en host
+- Foto-uploads en een berichtensysteem tussen gast en host
 - Meertaligheid (Engels) en moderatie van nieuwe aanbiedingen
