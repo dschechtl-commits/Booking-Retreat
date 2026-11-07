@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retreatly – Retreats in Europa & Azië</title>
+  <meta name="description" content="Ontdek en boek yoga-, meditatie- en wellnessretreats in Europa en Azië, of bied je eigen retreatlocatie aan.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#/" class="logo"><span class="logo-mark">◐</span> Retreatly</a>
+      <nav class="nav" id="nav">
+        <a href="#/retreats">Ontdek</a>
+        <a href="#/retreats?region=Europa">Europa</a>
+        <a href="#/retreats?region=Azi%C3%AB">Azië</a>
+        <a href="#/aanbieden" class="nav-host">Bied je locatie aan</a>
+        <span id="auth-slot"></span>
+      </nav>
+      <button class="menu-btn" id="menu-btn" aria-label="Menu">☰</button>
+    </div>
+  </header>
+
+  <main id="app" tabindex="-1"></main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div>
+        <a href="#/" class="logo"><span class="logo-mark">◐</span> Retreatly</a>
+        <p class="muted">Retreats in Europa en Azië — ontdekken, boeken én aanbieden.</p>
+      </div>
+      <div>
+        <h4>Ontdek</h4>
+        <a href="#/retreats?region=Europa">Retreats in Europa</a>
+        <a href="#/retreats?region=Azi%C3%AB">Retreats in Azië</a>
+        <a href="#/retreats?type=Yoga">Yoga retreats</a>
+      </div>
+      <div>
+        <h4>Voor hosts</h4>
+        <a href="#/aanbieden">Locatie aanbieden</a>
+        <a href="#/account">Mijn aanbod</a>
+      </div>
+    </div>
+  </footer>
+
+  <dialog id="modal" class="modal"></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

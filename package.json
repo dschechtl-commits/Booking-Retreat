@@ -1,0 +1,13 @@
+{
+  "name": "booking-retreat",
+  "version": "1.0.0",
+  "description": "Platform om retreats in Europa en Azië aan te bieden en te boeken",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}
