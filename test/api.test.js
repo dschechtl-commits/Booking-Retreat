@@ -46,13 +46,14 @@ test('host plaatst retreat, gast boekt, capaciteit wordt bewaakt', async () => {
 
   const date = new Date(Date.now() + 20 * 86400000).toISOString().slice(0, 10);
   const bad = await host('/api/retreats', { method: 'POST', body: { title: 'x' } });
+  assert.match(bad.data.error, /NEWNEI-opleiding/);
   assert.equal(bad.status, 400);
 
   const created = await host('/api/retreats', { method: 'POST', body: {
-    title: 'Yoga in Hoi An', type: 'Yoga', region: 'Azië', country: 'Vietnam', city: 'Hoi An',
+    title: 'Retreat in Hoi An', type: 'Retreat', region: 'Azië', country: 'Vietnam', city: 'Hoi An',
     description: 'Een prachtige retreat tussen de rijstvelden met dagelijks yoga.',
     packages: [{ name: 'Gedeeld', price: 500 }, { name: 'Privé', price: 800 }], depositPercent: 20,
-    cancellation: 'flexibel', level: 'Beginner', languages: ['Engels'], diets: ['Veganistisch'], instantBooking: true,
+    cancellation: 'flexibel', level: 'Beginner', languages: ['Engels'], diets: ['Veganistisch'], instantBooking: true, certification: 'NEWNEI-opleiding 2025', certified: true,
     nights: 5, capacity: 3, amenities: 'Ontbijt, Yogamat', startDates: [date],
   } });
   assert.equal(created.status, 200, JSON.stringify(created.data));
@@ -109,18 +110,20 @@ test('boeken op aanvraag: host accepteert of wijst af', async () => {
   assert.equal((await guest('/api/retreats/r_chiangmai')).data.retreat.dates[0].available, madeRetreat.capacity - 3);
 
   const host = client();
-  await host('/api/auth/login', { method: 'POST', body: { email: 'made@demo.nl', password: 'demo1234' } });
+  await host('/api/auth/login', { method: 'POST', body: { email: 'sanne@demo.nl', password: 'demo1234' } });
   assert.equal((await guest(`/api/bookings/${req1.data.booking.id}/accept`, { method: 'POST' })).status, 403);
   assert.equal((await host(`/api/bookings/${req1.data.booking.id}/accept`, { method: 'POST' })).data.booking.status, 'bevestigd');
   const declined = await host(`/api/bookings/${req2.data.booking.id}/decline`, { method: 'POST' });
   assert.equal(declined.data.booking.status, 'afgewezen');
   const listing = (await host('/api/me/listings')).data.listings.find((l) => l.id === 'r_chiangmai');
   assert.equal(listing.pending, 0);
-  assert.equal(listing.revenue, 540);
+  assert.equal(listing.revenue, 990);
 });
 
 test('extra filters', async () => {
   const c = client();
+  const day = await c('/api/retreats?duration=dag');
+  assert.ok(day.data.retreats.length && day.data.retreats.every((r) => r.nights === 0));
   const short = await c('/api/retreats?duration=1-3');
   assert.ok(short.data.retreats.length && short.data.retreats.every((r) => r.nights <= 3));
   const flex = await c('/api/retreats?flexible=1&instant=1');
@@ -131,8 +134,8 @@ test('extra filters', async () => {
 
 test('login en CSRF-check', async () => {
   const c = client();
-  assert.equal((await c('/api/auth/login', { method: 'POST', body: { email: 'ana@demo.nl', password: 'fout' } })).status, 401);
-  assert.equal((await c('/api/auth/login', { method: 'POST', body: { email: 'ana@demo.nl', password: 'demo1234' } })).status, 200);
+  assert.equal((await c('/api/auth/login', { method: 'POST', body: { email: 'eva@demo.nl', password: 'fout' } })).status, 401);
+  assert.equal((await c('/api/auth/login', { method: 'POST', body: { email: 'eva@demo.nl', password: 'demo1234' } })).status, 200);
   const res = await fetch(base + '/api/auth/logout', { method: 'POST', headers: { 'Content-Type': 'text/plain' } });
   assert.equal(res.status, 415);
 });
@@ -140,7 +143,7 @@ test('login en CSRF-check', async () => {
 test('statische bestanden en path traversal', async () => {
   const home = await fetch(base + '/');
   assert.equal(home.status, 200);
-  assert.match(await home.text(), /Retreatly/);
+  assert.match(await home.text(), /NEWNEI/);
   const trav = await fetch(base + '/..%2fpackage.json');
   assert.notEqual(trav.status, 200);
 });
