@@ -2,7 +2,7 @@
 
 Een platform waarop facilitators die de NEWNEI-opleiding hebben gevolgd hun eigen retreats, experience days, workshops, masterclasses en avondsessies kunnen organiseren, en waar deelnemers die events in Europa en Azië kunnen ontdekken en boeken.
 
-De vormgeving volgt de huisstijl van [newneitour.com](https://newneitour.com): espresso en papier, goudverlopen, de lettertypes Bricolage Grotesque en Figtree, en zes energiekleuren (één per soort event).
+De vormgeving heeft een natuurlijk karakter (bosgroen, mos, salie, linnen en terracotta, de lettertypes Newsreader en Figtree) en sluit aan bij de NEWNEI-familie via de gouden bol. Elk event krijgt automatisch een eigen landschapsillustratie zolang er geen foto is.
 
 ## Functies
 

@@ -16,18 +16,80 @@ const today = () => new Date().toISOString().slice(0, 10);
 const stars = (n) => '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
 const fmtRating = (n) => n.toFixed(2).replace('.', ',');
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+const ICON = {
+  leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-9 6-14 15-14 0 9-5 15-14 15"/><path d="M5 19c3-4 6-7 10-9"/></svg>',
+  shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>',
+  return: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
+};
 const STATUS_LABEL = { aangevraagd: 'aanvraag', bevestigd: 'bevestigd', afgewezen: 'afgewezen', geannuleerd: 'geannuleerd' };
 
-// Zes energiekleuren, één per soort event.
+// Aardse kleur per soort event (voor bolletjes en accenten).
 const TYPE_ART = {
-  'Retreat': ['☼', '#D9A94E', '#7A5216'],
-  'Experience Day': ['✦', '#8A63F6', '#5B34C9'],
-  'Workshop': ['◎', '#2FB59B', '#14735F'],
-  'Masterclass': ['✺', '#3AA7E0', '#1F6FA8'],
-  'Avondsessie': ['☾', '#F04E6E', '#C81E45'],
-  'Meerdaagse training': ['❋', '#F07437', '#C2531C'],
+  'Retreat': ['', '#6B8F5E'],
+  'Experience Day': ['', '#C9925E'],
+  'Workshop': ['', '#4F7F63'],
+  'Masterclass': ['', '#5E8A8C'],
+  'Avondsessie': ['', '#4A5470'],
+  'Meerdaagse training': ['', '#B5714C'],
 };
-const typeArt = (t) => TYPE_ART[t] || ['✦', '#D9A94E', '#7A5216'];
+// Landschapspaletten: lucht (2), zon/maan, heuvels van ver naar dichtbij.
+const LANDSCAPES = {
+  'Retreat': { sky: ['#F4E7CC', '#E7CFA2'], sun: '#FBF3DF', hills: ['#B7C8A8', '#86A777', '#557D5A', '#2C4A3B'] },
+  'Experience Day': { sky: ['#F7DFC2', '#EDBB8E'], sun: '#FFF5E2', hills: ['#DDBB91', '#B98F62', '#7F8F5A', '#3F5A40'] },
+  'Workshop': { sky: ['#E3ECDD', '#C3D6C2'], sun: '#F6F2E7', hills: ['#A6C2A2', '#73A083', '#3F7057', '#1F3A2E'], trees: true },
+  'Masterclass': { sky: ['#E1EAE8', '#BCD2D2'], sun: '#F6F2E7', hills: ['#97B7B6', '#628E90', '#3C6466', '#1E3D3E'], water: true },
+  'Avondsessie': { sky: ['#2B3651', '#4E5A78'], sun: '#F2E7C9', hills: ['#414F66', '#323F52', '#232E3C', '#151C26'], night: true },
+  'Meerdaagse training': { sky: ['#F4DCC6', '#E4AC86'], sun: '#FCEDD6', hills: ['#CF9670', '#AB714D', '#73603F', '#3F3C2B'] },
+  hero: { sky: ['#2C4A3B', '#3E5E4B'], sun: '#E6CF98', hills: ['#4D6E57', '#3A5A46', '#2A4536', '#1B3026'], dusk: true },
+  europa: { sky: ['#E5ECE0', '#C9D8C4'], sun: '#F7F2E6', hills: ['#A9BFA0', '#7FA27A', '#4F7A5A', '#2C4A3B'], trees: true },
+  azie: { sky: ['#F3E2C6', '#E3BE8E'], sun: '#FBF0DA', hills: ['#BFC79A', '#93A86E', '#5F804F', '#344D30'], terraces: true },
+};
+
+// Klein deterministisch random-getal op basis van een tekst, zodat elk event een eigen landschap heeft.
+function seeded(str) {
+  let h = 2166136261;
+  for (const c of String(str)) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296;
+}
+
+function hillPath(rnd, base, amp, W = 400, H = 300) {
+  const n = 4 + Math.floor(rnd() * 3);
+  const pts = [...Array(n + 1)].map((_, i) => [(i / n) * W, base - rnd() * amp]);
+  let d = `M0,${H} L0,${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < n; i++) {
+    const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+    const mx = (x1 + x2) / 2;
+    d += ` C${mx.toFixed(1)},${y1.toFixed(1)} ${mx.toFixed(1)},${y2.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+  }
+  return d + ` L${W},${H} Z`;
+}
+
+function landscape(seed, pal) {
+  const rnd = seeded(seed);
+  const id = 'g' + Math.floor(rnd() * 1e9).toString(36);
+  const sunX = 70 + rnd() * 260, sunY = 70 + rnd() * 50, sunR = pal.night ? 22 : 30 + rnd() * 18;
+  let out = `<svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${pal.sky[0]}"/><stop offset="1" stop-color="${pal.sky[1]}"/></linearGradient>
+    <radialGradient id="${id}s"><stop offset="0" stop-color="${pal.sun}" stop-opacity=".9"/><stop offset="1" stop-color="${pal.sun}" stop-opacity="0"/></radialGradient></defs>
+    <rect width="400" height="300" fill="url(#${id})"/>`;
+  if (pal.night || pal.dusk) for (let i = 0; i < 26; i++) out += `<circle cx="${(rnd() * 400).toFixed(0)}" cy="${(rnd() * 140).toFixed(0)}" r="${(rnd() * 1.1 + .3).toFixed(2)}" fill="#F6EFD9" opacity="${(rnd() * .6 + .3).toFixed(2)}"/>`;
+  out += `<circle cx="${sunX}" cy="${sunY}" r="${sunR * 2.4}" fill="url(#${id}s)" opacity=".55"/><circle cx="${sunX}" cy="${sunY}" r="${sunR}" fill="${pal.sun}"/>`;
+  if (pal.night) out += `<circle cx="${sunX + 9}" cy="${sunY - 6}" r="${sunR}" fill="${pal.sky[0]}"/>`;
+  const bases = [150, 185, 220, 255];
+  pal.hills.forEach((c, i) => {
+    if (pal.water && i === 2) out += `<rect y="${bases[2] - 18}" width="400" height="80" fill="${pal.hills[0]}" opacity=".55"/><path d="M40 ${bases[2] - 8} h70 M210 ${bases[2] - 2} h90 M120 ${bases[2] + 6} h50" stroke="#F6F2E7" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>`;
+    out += `<path d="${hillPath(rnd, bases[i], [70, 55, 40, 30][i])}" fill="${c}"/>`;
+    if (pal.terraces && i === 1) for (let k = 0; k < 4; k++) out += `<path d="${hillPath(seeded(seed + k), bases[1] + 12 + k * 9, 12)}" fill="none" stroke="#F3E8C8" stroke-width="1" opacity=".35"/>`;
+    if (pal.trees && i === 2) for (let k = 0; k < 9; k++) {
+      const x = 15 + rnd() * 370, y = bases[2] - 8 - rnd() * 20, h = 16 + rnd() * 20;
+      out += `<path d="M${x.toFixed(0)} ${(y - h).toFixed(0)} L${(x + h * .32).toFixed(0)} ${y.toFixed(0)} L${(x - h * .32).toFixed(0)} ${y.toFixed(0)} Z" fill="${pal.hills[3]}" opacity=".85"/>`;
+    }
+  });
+  return out + '</svg>';
+}
+
+const typeArt = (t) => TYPE_ART[t] || ['', '#6B8F5E'];
 const nightsLabel = (n) => (n === 0 ? 'Dagevent' : `${n} ${n === 1 ? 'nacht' : 'nachten'}`);
 const durationLabel = (d) => (d === 'dag' ? 'Dagevent' : `${d} nachten`);
 const dateRange = (start, nights, short = false) => {
@@ -36,10 +98,9 @@ const dateRange = (start, nights, short = false) => {
 };
 
 function art(r, cls = '', badges = true) {
-  const [glyph, c1, c2] = typeArt(r.type);
   const img = r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
-  const b = badges ? `<span class="badge">${esc(r.type)}</span>` : '';
-  return `<div class="art ${cls}" style="background:radial-gradient(circle at 75% 15%, rgba(255,255,255,.28), transparent 45%), linear-gradient(140deg, ${c1}, ${c2})"><span class="glyph" aria-hidden="true">${glyph}</span>${img}${b}</div>`;
+  const b = badges ? `<span class="badge"><span class="dot-c" style="background:${typeArt(r.type)[1]}"></span>${esc(r.type)}</span>` : '';
+  return `<div class="art ${cls}">${landscape(r.id || r.title, LANDSCAPES[r.type] || LANDSCAPES.Retreat)}${img}${b}</div>`;
 }
 
 function favButton(id, extra = '') {
@@ -179,11 +240,11 @@ async function viewHome() {
   const { types, durations } = state.meta;
   app.innerHTML = `
   <section class="hero">
-    <span class="sphere sphere-xl" aria-hidden="true"></span>
+    <div class="hero-land" aria-hidden="true">${landscape('hero-newnei', LANDSCAPES.hero)}</div>
     <div class="container">
-      <span class="pill-label">Europa · Azië · ${state.meta.types.length} soorten events</span>
-      <h1>NEWNEI<br><span class="gold">EVENTS</span><br>&amp; RETREATS</h1>
-      <p class="lead">Ervaar NEWNEI live, op de mooiste plekken van Europa en Azië. <strong>Niet luisteren. Doén.</strong></p>
+      <span class="eyebrow">NEWNEI-events & retreats · Europa en Azië</span>
+      <h1>Kom thuis in jezelf.<br><em>Midden in de natuur.</em></h1>
+      <p class="lead">Ervaar NEWNEI live: aan zee, in de bergen, tussen de rijstvelden. <strong>Niet luisteren. Doén.</strong></p>
       <p class="sub">Retreats, experience days en workshops, georganiseerd door facilitators die de NEWNEI-opleiding hebben gevolgd. Geen voorkennis nodig, alleen een open hart.</p>
       <form class="search" id="home-search">
         <div class="sfield"><label for="s-q">Waar of wat?</label><input id="s-q" name="q" placeholder="Bali, Utrecht, overvloed…"></div>
@@ -192,24 +253,24 @@ async function viewHome() {
         <div class="sfield"><label for="s-dur">Duur</label><select id="s-dur" name="duration"><option value="">Elke duur</option>${durations.map((d) => `<option value="${d}">${durationLabel(d)}</option>`).join('')}</select></div>
         <button class="btn" type="submit">Zoeken</button>
       </form>
-      <div class="hero-chips"><span>✦ Iedereen kan meedoen</span><span>✦ Geen ervaring nodig</span><span>✦ Ook voor coaches &amp; therapeuten</span></div>
+      <div class="hero-chips"><span>Iedereen kan meedoen</span><span>Geen ervaring nodig</span><span>Ook voor coaches &amp; therapeuten</span></div>
     </div>
   </section>
-  <div class="hero-bar"></div>
+  
 
   <section class="container trust">
-    <div><span class="ico">✦</span><b>NEWNEI-facilitators</b><span>Elk event wordt georganiseerd door iemand die de NEWNEI-opleiding heeft gevolgd</span></div>
-    <div><span class="ico">◎</span><b>Veilig reserveren</b><span>Je reserveert met een aanbetaling, de rest betaal je bij aankomst</span></div>
-    <div><span class="ico">↺</span><b>Duidelijk annuleren</b><span>Het annuleringsbeleid staat bij elk event, zonder kleine lettertjes</span></div>
-    <div><span class="ico">★</span><b>Echte ervaringen</b><span>Alleen deelnemers met een boeking kunnen een review schrijven</span></div>
+    <div><span class="ico">${ICON.leaf}</span><b>NEWNEI-facilitators</b><span>Elk event wordt georganiseerd door iemand die de NEWNEI-opleiding heeft gevolgd</span></div>
+    <div><span class="ico">${ICON.shield}</span><b>Veilig reserveren</b><span>Je reserveert met een aanbetaling, de rest betaal je bij aankomst</span></div>
+    <div><span class="ico">${ICON.return}</span><b>Duidelijk annuleren</b><span>Het annuleringsbeleid staat bij elk event, zonder kleine lettertjes</span></div>
+    <div><span class="ico">${ICON.heart}</span><b>Echte ervaringen</b><span>Alleen deelnemers met een boeking kunnen een review schrijven</span></div>
   </section>
 
   <section class="block container">
-    <div class="section-head"><div><span class="eyebrow">Bestemmingen</span><h2>Waar begint jouw<br>NEWNEI-reis?</h2></div></div>
+    <div class="section-head"><div><span class="eyebrow">Bestemmingen</span><h2>Waar begint jouw<br><em>NEWNEI-reis?</em></h2></div></div>
     <div class="regions">
-      <a class="region-card region-eu" href="#/retreats?region=Europa"><h3>Europa</h3><p>Van experience days in Nederland tot retreats aan de Portugese kust en in Toscane.</p>
+      <a class="region-card region-eu" href="#/retreats?region=Europa"><div class="region-land">${landscape('europa', LANDSCAPES.europa)}</div><h3>Europa</h3><p>Van experience days in Nederland tot retreats aan de Portugese kust en in Toscane.</p>
         <div class="chips">${state.meta.countries.Europa.slice(0, 6).map((c) => `<span>${esc(c)}</span>`).join('')}</div></a>
-      <a class="region-card region-as" href="#/retreats?region=${encodeURIComponent('Azië')}"><h3>Azië</h3><p>Diepe retreats tussen rijstvelden, tempels en tropische stranden.</p>
+      <a class="region-card region-as" href="#/retreats?region=${encodeURIComponent('Azië')}"><div class="region-land">${landscape('azie', LANDSCAPES.azie)}</div><h3>Azië</h3><p>Diepe retreats tussen rijstvelden, tempels en tropische stranden.</p>
         <div class="chips">${state.meta.countries['Azië'].slice(0, 6).map((c) => `<span>${esc(c)}</span>`).join('')}</div></a>
     </div>
   </section>
@@ -221,13 +282,13 @@ async function viewHome() {
 
   <section class="block container" style="padding-top:0">
     <span class="eyebrow">Kies je vorm</span>
-    <h2>Eén avond. Eén dag.<br>Of een hele reis.</h2>
+    <h2>Eén avond. Eén dag.<br><em>Of een hele reis.</em></h2>
     <div class="types">${types.map((t) => `<a class="type-pill" href="#/retreats?type=${encodeURIComponent(t)}"><span class="dot-c" style="background:${typeArt(t)[1]}"></span>${esc(t)}</a>`).join('')}</div>
     <div class="types" style="margin-top:12px">
-      <a class="type-pill" href="#/retreats?duration=dag">☀ Dagevents</a>
-      <a class="type-pill" href="#/retreats?level=Beginner">🌱 Voor beginners</a>
-      <a class="type-pill" href="#/retreats?level=Gevorderd">◎ Voor professionals</a>
-      <a class="type-pill" href="#/retreats?flexible=1">↺ Gratis annuleren</a>
+      <a class="type-pill" href="#/retreats?duration=dag">Dagevents</a>
+      <a class="type-pill" href="#/retreats?level=Beginner">Voor beginners</a>
+      <a class="type-pill" href="#/retreats?level=Gevorderd">Voor professionals</a>
+      <a class="type-pill" href="#/retreats?flexible=1">Gratis annuleren</a>
       <a class="type-pill" href="#/retreats?language=Nederlands">Nederlandstalig</a>
     </div>
   </section>
@@ -235,7 +296,7 @@ async function viewHome() {
   <section class="block dark">
     <div class="container">
       <span class="eyebrow">Zo werkt het</span>
-      <h2>Kies. Reserveer.<br><span class="gold">Ervaar.</span></h2>
+      <h2>Kies. Reserveer.<br><em>Ervaar.</em></h2>
       <div class="steps" style="margin-top:30px">
         <div class="step"><div class="num">1</div><h3>Kies je event</h3><p class="muted">Filter op land, soort event, duur, niveau en budget. Bewaar favorieten op je verlanglijst.</p></div>
         <div class="step"><div class="num">2</div><h3>Reserveer je plek</h3><p class="muted">Kies je datum en ticket of kamer. Je betaalt een aanbetaling, de rest bij aankomst.</p></div>
@@ -353,8 +414,8 @@ async function viewDetail(id) {
       <div>
         <section id="sec-overzicht">
           <div class="facts">
-            <span class="fact">✦ ${esc(r.type)}</span><span class="fact">☾ ${nightsLabel(r.nights)}</span>
-            <span class="fact">◎ max. ${r.capacity} deelnemers</span><span class="fact">${esc(r.level)}</span>
+            <span class="fact"><span class="dot-c" style="background:${typeArt(r.type)[1]}"></span>${esc(r.type)}</span><span class="fact">${nightsLabel(r.nights)}</span>
+            <span class="fact">max. ${r.capacity} deelnemers</span><span class="fact">${esc(r.level)}</span>
             <span class="fact">${r.languages.map(esc).join(', ')}</span>
             ${r.instantBooking ? '<span class="fact">⚡ Direct boeken</span>' : '<span class="fact">✉ Boeken op aanvraag</span>'}
           </div>
@@ -369,9 +430,9 @@ async function viewDetail(id) {
             return mm ? `<li><time>${esc(mm[1])}</time><span>${esc(mm[2])}</span></li>` : `<li><time></time><span>${esc(line)}</span></li>`;
           }).join('')}</ul></section>` : ''}
         ${r.teacherName ? `<section id="sec-facilitator"><h2>Je facilitator</h2><div class="host-box" style="margin-top:0"><div class="avatar">${esc(initials(r.teacherName))}</div>
-          <div><b>${esc(r.teacherName)}</b>${r.certification ? `<div class="small" style="color:var(--g1);font-weight:600">✦ ${esc(r.certification)}</div>` : ''}${r.teacherBio ? `<p class="small" style="margin:4px 0 0">${esc(r.teacherBio)}</p>` : ''}</div></div></section>` : ''}
+          <div><b>${esc(r.teacherName)}</b>${r.certification ? `<div class="small cert-line">${esc(r.certification)}</div>` : ''}${r.teacherBio ? `<p class="small" style="margin:4px 0 0">${esc(r.teacherBio)}</p>` : ''}</div></div></section>` : ''}
         <section id="sec-locatie"><h2>${r.nights ? 'Verblijf' : 'Locatie & tickets'}</h2>${r.accommodation ? `<p>${esc(r.accommodation)}</p>` : ''}
-          <div class="pkg-table">${r.packages.map((p) => `<div><span>✦ ${esc(p.name)}</span><b>${euro(p.price)} p.p.</b></div>`).join('')}</div></section>
+          <div class="pkg-table">${r.packages.map((p) => `<div><span>${esc(p.name)}</span><b>${euro(p.price)} p.p.</b></div>`).join('')}</div></section>
         ${r.food || r.diets.length ? `<section id="sec-eten"><h2>Eten</h2>${r.food ? `<p>${esc(r.food)}</p>` : ''}
           ${r.diets.length ? `<div class="tags">${r.diets.map((d) => `<span>${esc(d)}</span>`).join('')}</div>` : ''}</section>` : ''}
         <section id="sec-annulering"><h2>Annuleringsbeleid & betaling</h2>
