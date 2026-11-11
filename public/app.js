@@ -629,7 +629,7 @@ async function viewDetail(id) {
 function viewHostForm(existing) {
   if (!state.user) {
     app.innerHTML = `<div class="container page"><div class="panel center" style="max-width:680px;margin:auto">
-      <div class="landing-photo" aria-hidden="true"><img src="/img/cta-facilitator.jpg" alt=""></div>
+      <div class="landing-photo" aria-hidden="true"><img src="/img/fac-landing.jpg" alt=""></div>
       <span class="eyebrow">${t('nav.facilitators')}</span><h1>${t('host.landingTitle')}</h1>
       <p class="muted">${t('host.landingText')}</p>
       <div class="steps" style="text-align:left;margin:24px 0">
