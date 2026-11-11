@@ -4,6 +4,14 @@ I18N_LANGS.push('es');
 I18N_LOCALES.es = 'es-ES';
 
 I18N_STRINGS.es = {
+  'community.eyebrow': 'Vivirlo juntos',
+  'community.a': 'No lo haces solo.',
+  'community.b': 'Lo haces en compañía.',
+  'community.text': 'En un evento NEWNEI conoces a personas que, como tú, quieren crecer. Grupos reducidos, conversaciones reales y espacio para sentir: en un círculo sobre la hierba, junto al mar o alrededor de una mesa llena de comida fresca.',
+  'community.p1': 'Grupos reducidos y atención personal',
+  'community.p2': 'Lugares en plena naturaleza',
+  'community.p3': 'Un espacio seguro, guiado por un facilitador NEWNEI',
+  'footer.photos': 'Fotos: Unsplash',
   'demo.banner': 'Versión de demostración: explora y prueba con total libertad. Las cuentas y reservas se borran de vez en cuando.',
   'meta.title': 'NEWNEI® Events – Retiros y eventos con facilitadores NEWNEI',
   'meta.description': 'Descubre y reserva retiros, experience days y talleres NEWNEI en Europa y Asia, organizados por facilitadores formados en NEWNEI.',

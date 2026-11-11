@@ -163,6 +163,18 @@ const dateRange = (start, nights, short = false) => {
 };
 const place = (r) => `${esc(r.city)}, ${esc(tv('countries', r.country))}`;
 
+// Sfeerbeelden naast de hoofdfoto: verblijf en eten voor meerdaagse events, verbinding en rust voor dagevents.
+const GALLERY = {
+  stay: ['/img/gal-stay.jpg', '/img/gal-food.jpg', '/img/gal-lake.jpg', '/img/gal-pool.jpg', '/img/gal-forest.jpg', '/img/gal-food2.jpg'],
+  day: ['/img/people-hands.jpg', '/img/gal-mala.jpg', '/img/gal-stones.jpg', '/img/people-reach.jpg', '/img/gal-food2.jpg', '/img/gal-forest.jpg'],
+};
+function galleryFor(r) {
+  const pool = GALLERY[r.nights ? 'stay' : 'day'];
+  const rnd = seeded(r.id);
+  const start = Math.floor(rnd() * pool.length);
+  return [0, 1].map((i) => pool[(start + i * 2) % pool.length]);
+}
+
 function art(r, cls = '', badges = true) {
   const img = r.image ? `<img src="${esc(r.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : '';
   const b = badges ? `<span class="badge"><span class="dot-c" style="background:${typeArt(r.type)[1]}"></span>${esc(tv('types', r.type))}</span>` : '';
@@ -304,7 +316,7 @@ async function viewHome() {
   const { types, durations } = state.meta;
   app.innerHTML = `
   <section class="hero">
-    <div class="hero-land" aria-hidden="true">${landscape('hero-newnei', LANDSCAPES.hero)}</div>
+    <div class="hero-photo" aria-hidden="true"><img src="/img/hero.jpg" alt="" fetchpriority="high"></div>
     <div class="container">
       <span class="eyebrow">${t('home.eyebrow')}</span>
       <h1>${t('home.h1a')}<br><em>${t('home.h1b')}</em></h1>
@@ -331,9 +343,9 @@ async function viewHome() {
   <section class="block container">
     <div class="section-head"><div><span class="eyebrow">${t('home.destEyebrow')}</span><h2>${t('home.destA')}<br><em>${t('home.destB')}</em></h2></div></div>
     <div class="regions">
-      <a class="region-card region-eu" href="#/retreats?region=Europa"><div class="region-land">${landscape('europa', LANDSCAPES.europa)}</div><h3>${tv('regions', 'Europa')}</h3><p>${t('home.europe')}</p>
+      <a class="region-card region-eu" href="#/retreats?region=Europa"><div class="region-land"><img src="/img/region-europe.jpg" alt="" loading="lazy"></div><h3>${tv('regions', 'Europa')}</h3><p>${t('home.europe')}</p>
         <div class="chips">${state.meta.countries.Europa.slice(0, 6).map((c) => `<span>${esc(tv('countries', c))}</span>`).join('')}</div></a>
-      <a class="region-card region-as" href="#/retreats?region=${encodeURIComponent('Azië')}"><div class="region-land">${landscape('azie', LANDSCAPES.azie)}</div><h3>${tv('regions', 'Azië')}</h3><p>${t('home.asia')}</p>
+      <a class="region-card region-as" href="#/retreats?region=${encodeURIComponent('Azië')}"><div class="region-land"><img src="/img/region-asia.jpg" alt="" loading="lazy"></div><h3>${tv('regions', 'Azië')}</h3><p>${t('home.asia')}</p>
         <div class="chips">${state.meta.countries['Azië'].slice(0, 6).map((c) => `<span>${esc(tv('countries', c))}</span>`).join('')}</div></a>
     </div>
   </section>
@@ -341,6 +353,27 @@ async function viewHome() {
   <section class="block container" style="padding-top:0">
     <div class="section-head"><div><span class="eyebrow">${t('home.soon')}</span><h2>${t('home.popular')}</h2></div><a class="btn btn-ghost" href="#/retreats">${t('home.viewAll')} →</a></div>
     <div class="cards">${retreats.slice(0, 8).map(retreatCard).join('')}</div>
+  </section>
+
+  <section class="block container community">
+    <div class="community-text">
+      <span class="eyebrow">${t('community.eyebrow')}</span>
+      <h2>${t('community.a')}<br><em>${t('community.b')}</em></h2>
+      <p class="muted">${t('community.text')}</p>
+      <ul class="community-points">
+        <li>${ICON.heart}<span>${t('community.p1')}</span></li>
+        <li>${ICON.leaf}<span>${t('community.p2')}</span></li>
+        <li>${ICON.shield}<span>${t('community.p3')}</span></li>
+      </ul>
+      <a class="btn" href="#/retreats">${t('home.viewAll')} →</a>
+    </div>
+    <div class="mosaic" aria-hidden="true">
+      <figure class="m1"><img src="/img/people-group.jpg" alt="" loading="lazy"></figure>
+      <figure class="m2"><img src="/img/people-meditate-grass.jpg" alt="" loading="lazy"></figure>
+      <figure class="m3"><img src="/img/people-hands.jpg" alt="" loading="lazy"></figure>
+      <figure class="m4"><img src="/img/people-pier.jpg" alt="" loading="lazy"></figure>
+      <figure class="m5"><img src="/img/people-balcony.jpg" alt="" loading="lazy"></figure>
+    </div>
   </section>
 
   <section class="block container" style="padding-top:0">
@@ -356,7 +389,8 @@ async function viewHome() {
     </div>
   </section>
 
-  <section class="block dark">
+  <section class="block dark how">
+    <div class="how-bg" aria-hidden="true"><img src="/img/how-bg.jpg" alt="" loading="lazy"></div>
     <div class="container">
       <span class="eyebrow">${t('how.eyebrow')}</span>
       <h2>${t('how.a')}<br><em>${t('how.b')}</em></h2>
@@ -370,8 +404,9 @@ async function viewHome() {
 
   <section class="block container">
     <div class="cta-host">
-      <div><span class="eyebrow">${t('nav.facilitators')}</span><h2>${t('cta.title')}</h2><p>${t('cta.text')}</p></div>
-      <a class="btn" href="#/aanbieden">${t('cta.button')}</a>
+      <div class="cta-photo" aria-hidden="true"><img src="/img/cta-facilitator.jpg" alt="" loading="lazy"></div>
+      <div class="cta-body"><span class="eyebrow">${t('nav.facilitators')}</span><h2>${t('cta.title')}</h2><p>${t('cta.text')}</p>
+      <a class="btn" href="#/aanbieden">${t('cta.button')}</a></div>
     </div>
   </section>`;
 
@@ -473,7 +508,10 @@ async function viewDetail(id) {
         <div class="muted">📍 ${place(r)} · ${r.reviews ? `★ ${fmtRating(r.rating)} (${tn('det.reviewCount', r.reviews)})` : t('card.new')}</div></div>
       ${favButton(r.id, 'fav-lg')}
     </div>
-    <div style="margin-top:22px">${art(r, 'art-lg')}</div>
+    <div class="gallery">
+      <div class="gallery-main">${art(r, 'art-lg')}</div>
+      ${galleryFor(r).map((src) => `<figure><img src="${src}" alt="" loading="lazy"></figure>`).join('')}
+    </div>
     <nav class="sec-nav">${sections.map(([k, l]) => `<button type="button" data-scroll="sec-${k}">${esc(l)}</button>`).join('')}</nav>
     <div class="detail-grid">
       <div>
@@ -591,6 +629,7 @@ async function viewDetail(id) {
 function viewHostForm(existing) {
   if (!state.user) {
     app.innerHTML = `<div class="container page"><div class="panel center" style="max-width:680px;margin:auto">
+      <div class="landing-photo" aria-hidden="true"><img src="/img/cta-facilitator.jpg" alt=""></div>
       <span class="eyebrow">${t('nav.facilitators')}</span><h1>${t('host.landingTitle')}</h1>
       <p class="muted">${t('host.landingText')}</p>
       <div class="steps" style="text-align:left;margin:24px 0">

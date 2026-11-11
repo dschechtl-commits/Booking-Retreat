@@ -6,6 +6,14 @@ const I18N_LOCALES = { nl: 'nl-NL', en: 'en-GB', fr: 'fr-FR' };
 
 const I18N_STRINGS = {
   nl: {
+    'community.eyebrow': 'Samen ervaren',
+    'community.a': 'Je doet het niet alleen.',
+    'community.b': 'Je doet het samen.',
+    'community.text': 'Op een NEWNEI-event ontmoet je mensen die net als jij willen groeien. Kleine groepen, echte gesprekken en ruimte om te voelen: in een cirkel op het gras, aan zee of rond een tafel vol vers eten.',
+    'community.p1': 'Kleine groepen en persoonlijke aandacht',
+    'community.p2': 'Plekken midden in de natuur',
+    'community.p3': 'Een veilige bedding, begeleid door een NEWNEI-facilitator',
+    'footer.photos': 'Foto’s: Unsplash',
     'demo.banner': 'Demoversie: voel je vrij om rond te kijken en te testen. Accounts en boekingen worden af en toe gewist.',
     'meta.title': 'NEWNEI® Events – Retreats & events door NEWNEI-facilitators',
     'meta.description': 'Ontdek en boek NEWNEI-retreats, experience days en workshops in Europa en Azië, georganiseerd door facilitators die de NEWNEI-opleiding hebben gevolgd.',
@@ -112,6 +120,14 @@ const I18N_STRINGS = {
   },
 
   en: {
+    'community.eyebrow': 'Experience it together',
+    'community.a': 'You don’t do it alone.',
+    'community.b': 'You do it together.',
+    'community.text': 'At a NEWNEI event you meet people who, like you, want to grow. Small groups, real conversations and space to feel: in a circle on the grass, by the sea or around a table full of fresh food.',
+    'community.p1': 'Small groups and personal attention',
+    'community.p2': 'Places surrounded by nature',
+    'community.p3': 'A safe space, guided by a NEWNEI facilitator',
+    'footer.photos': 'Photos: Unsplash',
     'demo.banner': 'Demo version: feel free to look around and test. Accounts and bookings are reset from time to time.',
     'meta.title': 'NEWNEI® Events – Retreats & events by NEWNEI facilitators',
     'meta.description': 'Discover and book NEWNEI retreats, experience days and workshops in Europe and Asia, organised by facilitators who completed the NEWNEI training.',
@@ -218,6 +234,14 @@ const I18N_STRINGS = {
   },
 
   fr: {
+    'community.eyebrow': 'Vivre ensemble',
+    'community.a': 'Vous ne le faites pas seul.',
+    'community.b': 'Vous le faites ensemble.',
+    'community.text': 'Lors d’un événement NEWNEI, vous rencontrez des personnes qui, comme vous, veulent grandir. Petits groupes, vraies conversations et espace pour ressentir : en cercle sur l’herbe, au bord de la mer ou autour d’une table de produits frais.',
+    'community.p1': 'Petits groupes et attention personnelle',
+    'community.p2': 'Des lieux au cœur de la nature',
+    'community.p3': 'Un cadre sûr, accompagné par un facilitateur NEWNEI',
+    'footer.photos': 'Photos : Unsplash',
     'demo.banner': 'Version de démonstration : explorez et testez librement. Les comptes et réservations sont réinitialisés de temps en temps.',
     'meta.title': 'NEWNEI® Events – Retraites et événements par des facilitateurs NEWNEI',
     'meta.description': 'Découvrez et réservez des retraites, journées Experience et ateliers NEWNEI en Europe et en Asie, organisés par des facilitateurs formés à NEWNEI.',

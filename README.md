@@ -23,6 +23,12 @@ De vormgeving heeft een natuurlijk karakter (bosgroen, mos, salie, linnen en ter
 
 Betalingen zijn nog niet gekoppeld: de aanbetaling wordt berekend en getoond, maar er wordt nog niets afgerekend.
 
+## Foto's
+
+De foto's in `public/img/` komen van [Unsplash](https://unsplash.com) en vallen onder de [Unsplash-licentie](https://unsplash.com/license): gratis te gebruiken, ook commercieel, zonder verplichte naamsvermelding. Eigen foto's toevoegen: zet ze in `public/img/` en verwijs ernaar (bijv. `/img/mijn-retreat.jpg`), of gebruik bij een event een https-link. Zonder foto toont een event automatisch een getekend landschap.
+
+Let op: bij herkenbare personen geeft Unsplash geen garantie op toestemming van die personen (model release). Voor echte marketing zijn eigen foto's van NEWNEI-events het mooist.
+
 ## Talen
 
 De site is beschikbaar in het **Nederlands, Engels, Frans en Spaans** (talenkiezer met vlaggen rechtsboven). De taal wordt gekozen op basis van de browser, kan via `?lang=en` worden afgedwongen en wordt onthouden.
