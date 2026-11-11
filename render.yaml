@@ -1,0 +1,21 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Zet NEWNEI Events online achter een wachtwoord en buiten zoekmachines.
+services:
+  - type: web
+    name: newnei-events
+    runtime: node
+    plan: starter            # met vaste schijf, zodat accounts en boekingen bewaard blijven
+    buildCommand: "true"     # geen dependencies nodig
+    startCommand: node server.js
+    healthCheckPath: /robots.txt
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_FILE
+        value: /var/data/db.json
+      - key: SITE_PASSWORD
+        sync: false          # vul je zelf in bij het aanmaken in Render
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1

@@ -35,6 +35,19 @@ De site is beschikbaar in het **Nederlands, Engels en Frans** (talenkiezer met v
 
 De site vraagt zoekmachines en AI-crawlers om niets te indexeren: `robots.txt` (ook GPTBot, ClaudeBot, Google-Extended, CCBot e.d.), een `robots`-metatag en een `X-Robots-Tag`-header op elke response.
 
+## Online zetten (deelbare link, niet vindbaar)
+
+De site draait op elke Node-host. Met [Render](https://render.com) gaat het met de meegeleverde `render.yaml`:
+
+1. Maak een account op render.com en koppel je GitHub.
+2. Kies **New → Blueprint** en selecteer de repository `Booking-Retreat`.
+3. Vul bij `SITE_PASSWORD` een wachtwoord in en klik op **Apply**.
+4. Na een paar minuten krijg je een link als `https://newnei-events.onrender.com`. Deel die link samen met het wachtwoord.
+
+Bezoekers krijgen eerst een wachtwoordvenster (de gebruikersnaam maakt niet uit). Zoekmachines en AI-crawlers komen niet verder dan dat venster, en de site vraagt ze daarnaast via `robots.txt`, een metatag en een `X-Robots-Tag`-header om niets te indexeren.
+
+Het `starter`-plan in `render.yaml` heeft een vaste schijf, zodat accounts en boekingen bewaard blijven. Op het gratis plan werkt de site ook, maar dan worden alle gegevens bij elke herstart teruggezet naar de voorbeelddata.
+
 ## Starten
 
 Vereist Node.js 18 of hoger. Er zijn geen dependencies.
@@ -47,7 +60,7 @@ npm test           # API-tests
 Bij de eerste start wordt `data/db.json` aangemaakt met voorbeeldretreats.
 Demo-facilitators: `eva@demo.nl`, `lotte@demo.nl` en `sanne@demo.nl`, allemaal met wachtwoord `demo1234`.
 
-Instelbaar via omgevingsvariabelen: `PORT` en `DATA_FILE`.
+Instelbaar via omgevingsvariabelen: `PORT`, `DATA_FILE` en `SITE_PASSWORD` (zet de hele site achter een wachtwoord).
 
 ## Structuur
 

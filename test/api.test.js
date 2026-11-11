@@ -169,3 +169,19 @@ test('meertalige foutmeldingen en noindex', async () => {
   const r = await (await fetch(base + '/api/retreats/r_ubud')).json();
   assert.ok(r.retreat.translations.en.title.includes('Ubud'));
 });
+
+test('site-wachtwoord', async () => {
+  const locked = createApp(new Store(null), { sitePassword: 'geheim-woord' });
+  await new Promise((r) => locked.listen(0, r));
+  const u = `http://localhost:${locked.address().port}`;
+  try {
+    assert.equal((await fetch(u + '/')).status, 401);
+    assert.equal((await fetch(u + '/api/retreats')).status, 401);
+    const auth = (pw) => ({ headers: { Authorization: 'Basic ' + Buffer.from('x:' + pw).toString('base64') } });
+    assert.equal((await fetch(u + '/', auth('fout'))).status, 401);
+    const ok = await fetch(u + '/', auth('geheim-woord'));
+    assert.equal(ok.status, 200);
+    assert.match(ok.headers.get('x-robots-tag'), /noindex/);
+    assert.equal((await fetch(u + '/robots.txt')).status, 200); // crawlers mogen robots.txt lezen
+  } finally { locked.close(); }
+});
