@@ -147,3 +147,25 @@ test('statische bestanden en path traversal', async () => {
   const trav = await fetch(base + '/..%2fpackage.json');
   assert.notEqual(trav.status, 200);
 });
+
+test('meertalige foutmeldingen en noindex', async () => {
+  const login = (lang) => fetch(base + '/api/auth/login', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lang': lang }, body: JSON.stringify({ email: 'x@y.nl', password: 'fout' }) }).then((r) => r.json());
+  assert.equal((await login('nl')).error, 'Onjuist e-mailadres of wachtwoord');
+  assert.equal((await login('en')).error, 'Incorrect email address or password');
+  assert.equal((await login('fr')).error, 'Adresse e-mail ou mot de passe incorrect');
+  const viaHeader = await fetch(base + '/api/retreats/bestaat-niet', { headers: { 'Accept-Language': 'en-GB,en;q=0.9' } });
+  assert.equal((await viaHeader.json()).error, 'Event not found');
+  // validatielijst wordt per onderdeel vertaald
+  const c = client();
+  await c('/api/auth/register', { method: 'POST', body: { name: 'Fr', email: 'fr@x.nl', password: 'geheim123' } });
+  const res = await fetch(base + '/api/retreats', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lang': 'en' }, body: '{}' });
+  assert.equal(res.status, 401);
+  const home = await fetch(base + '/');
+  assert.match(home.headers.get('x-robots-tag'), /noindex/);
+  assert.match(await home.text(), /name="robots" content="noindex/);
+  const robots = await fetch(base + '/robots.txt');
+  assert.equal(robots.status, 200);
+  assert.match(await robots.text(), /Disallow: \//);
+  const r = await (await fetch(base + '/api/retreats/r_ubud')).json();
+  assert.ok(r.retreat.translations.en.title.includes('Ubud'));
+});

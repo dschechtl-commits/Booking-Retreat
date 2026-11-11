@@ -23,6 +23,18 @@ De vormgeving heeft een natuurlijk karakter (bosgroen, mos, salie, linnen en ter
 
 Betalingen zijn nog niet gekoppeld: de aanbetaling wordt berekend en getoond, maar er wordt nog niets afgerekend.
 
+## Talen
+
+De site is beschikbaar in het **Nederlands, Engels en Frans** (talenkiezer met vlaggen rechtsboven). De taal wordt gekozen op basis van de browser, kan via `?lang=en` worden afgedwongen en wordt onthouden.
+
+- Alle teksten staan in `public/i18n.js`. Een taal toevoegen: code in `I18N_LANGS`/`I18N_LOCALES`, een blok in `I18N_STRINGS` en de waarden in `I18N_VALUES`. Ontbrekende teksten vallen terug op Nederlands.
+- Foutmeldingen van de server worden vertaald via `lib/i18n.js` (header `X-Lang` of `Accept-Language`).
+- Facilitators kunnen bij hun event optioneel een Engelse en Franse titel en beschrijving invullen.
+
+## Niet vindbaar
+
+De site vraagt zoekmachines en AI-crawlers om niets te indexeren: `robots.txt` (ook GPTBot, ClaudeBot, Google-Extended, CCBot e.d.), een `robots`-metatag en een `X-Robots-Tag`-header op elke response.
+
 ## Starten
 
 Vereist Node.js 18 of hoger. Er zijn geen dependencies.

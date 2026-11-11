@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>NEWNEI® Events – Retreats & events door NEWNEI-facilitators</title>
   <meta name="description" content="Ontdek en boek NEWNEI-retreats, experience days en workshops in Europa en Azië, georganiseerd door facilitators die de NEWNEI-opleiding hebben gevolgd.">
+  <!-- Niet indexeren: geldt voor zoekmachines en AI-crawlers die deze instructie volgen. -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, noai, noimageai">
+  <meta name="googlebot" content="noindex, nofollow">
   <meta name="theme-color" content="#1F3A2E">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,12 +20,13 @@
     <div class="container topbar-inner">
       <a href="#/" class="logo" aria-label="NEWNEI Events – home"><span class="sphere" aria-hidden="true"></span><span class="wordmark"><span>NEWNEI<sup>®</sup></span><small>EVENTS &amp; RETREATS</small></span></a>
       <nav class="nav" id="nav">
-        <a href="#/retreats">Alle events</a>
-        <a href="#/retreats?region=Europa">Europa</a>
-        <a href="#/retreats?region=Azi%C3%AB">Azië</a>
-        <a href="#/aanbieden">Voor facilitators</a>
+        <a href="#/retreats" data-i18n="nav.events">Alle events</a>
+        <a href="#/retreats?region=Europa" data-i18n="nav.europe">Europa</a>
+        <a href="#/retreats?region=Azi%C3%AB" data-i18n="nav.asia">Azië</a>
+        <a href="#/aanbieden" data-i18n="nav.facilitators">Voor facilitators</a>
         <span id="auth-slot"></span>
       </nav>
+      <div class="lang-switch" id="lang-switch" role="group" aria-label="Language / Taal / Langue"></div>
       <button class="menu-btn" id="menu-btn" aria-label="Menu">☰</button>
     </div>
   </header>
@@ -33,20 +37,20 @@
     <div class="container footer-inner">
       <div>
         <a href="#/" class="logo"><span class="sphere" aria-hidden="true"></span><span class="wordmark"><span>NEWNEI<sup>®</sup></span><small>EVENTS &amp; RETREATS</small></span></a>
-        <p class="muted">Retreats, experience days en workshops door NEWNEI-facilitators, in Europa en Azië.</p>
-        <p class="small"><a href="https://newneitour.com" target="_blank" rel="noopener">Naar de NEWNEI Tour →</a></p>
+        <p class="muted" data-i18n="footer.tagline">Retreats, experience days en workshops door NEWNEI-facilitators, in Europa en Azië.</p>
+        <p class="small"><a href="https://newneitour.com" target="_blank" rel="noopener" data-i18n="footer.tour">Naar de NEWNEI Tour →</a></p>
       </div>
       <div>
-        <h4>Ontdek</h4>
-        <a href="#/retreats?region=Europa">Events in Europa</a>
-        <a href="#/retreats?region=Azi%C3%AB">Events in Azië</a>
-        <a href="#/retreats?type=Retreat">Retreats</a>
-        <a href="#/retreats?duration=dag">Dagevents</a>
+        <h4 data-i18n="footer.discover">Ontdek</h4>
+        <a href="#/retreats?region=Europa" data-i18n="footer.eventsEurope">Events in Europa</a>
+        <a href="#/retreats?region=Azi%C3%AB" data-i18n="footer.eventsAsia">Events in Azië</a>
+        <a href="#/retreats?type=Retreat" data-i18n="footer.retreats">Retreats</a>
+        <a href="#/retreats?duration=dag" data-i18n="footer.dayEvents">Dagevents</a>
       </div>
       <div>
-        <h4>Voor facilitators</h4>
-        <a href="#/aanbieden">Organiseer een event</a>
-        <a href="#/account?tab=aanbod">Mijn events</a>
+        <h4 data-i18n="footer.forFac">Voor facilitators</h4>
+        <a href="#/aanbieden" data-i18n="footer.organise">Organiseer een event</a>
+        <a href="#/account?tab=aanbod" data-i18n="footer.myEvents">Mijn events</a>
       </div>
     </div>
   </footer>
@@ -54,6 +58,7 @@
   <dialog id="modal" class="modal"></dialog>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <script src="/i18n.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>
