@@ -404,7 +404,7 @@ async function viewHome() {
 
   <section class="block container">
     <div class="cta-host">
-      <div class="cta-photo" aria-hidden="true"><img src="/img/cta-facilitator.jpg" alt="" loading="lazy"></div>
+      <div class="cta-photo" aria-hidden="true"><img src="/img/cta-group-meditation.jpg" alt="" loading="lazy"></div>
       <div class="cta-body"><span class="eyebrow">${t('nav.facilitators')}</span><h2>${t('cta.title')}</h2><p>${t('cta.text')}</p>
       <a class="btn" href="#/aanbieden">${t('cta.button')}</a></div>
     </div>
