@@ -25,11 +25,11 @@ Betalingen zijn nog niet gekoppeld: de aanbetaling wordt berekend en getoond, ma
 
 ## Talen
 
-De site is beschikbaar in het **Nederlands, Engels en Frans** (talenkiezer met vlaggen rechtsboven). De taal wordt gekozen op basis van de browser, kan via `?lang=en` worden afgedwongen en wordt onthouden.
+De site is beschikbaar in het **Nederlands, Engels, Frans en Spaans** (talenkiezer met vlaggen rechtsboven). De taal wordt gekozen op basis van de browser, kan via `?lang=en` worden afgedwongen en wordt onthouden.
 
-- Alle teksten staan in `public/i18n.js`. Een taal toevoegen: code in `I18N_LANGS`/`I18N_LOCALES`, een blok in `I18N_STRINGS` en de waarden in `I18N_VALUES`. Ontbrekende teksten vallen terug op Nederlands.
+- De teksten staan in `public/i18n.js` (NL, EN, FR) en `public/i18n-es.js` (Spaans). Een nieuwe taal toevoegen: kopieer `i18n-es.js`, vertaal het, laad het in `index.html`, voeg een vlag toe in `FLAGS` in `public/app.js` en vul `lib/i18n.js` aan. Ontbrekende teksten vallen terug op Nederlands.
 - Foutmeldingen van de server worden vertaald via `lib/i18n.js` (header `X-Lang` of `Accept-Language`).
-- Facilitators kunnen bij hun event optioneel een Engelse en Franse titel en beschrijving invullen.
+- Facilitators kunnen bij hun event optioneel een Engelse, Franse en Spaanse titel en beschrijving invullen.
 
 ## Niet vindbaar
 

@@ -363,3 +363,14 @@ details.host-bookings summary { cursor: pointer; font-weight: 600; color: var(--
 @media (max-width: 900px) { .topbar-inner { gap: 10px; } .lang-btn .code { display: none; } .lang-btn { padding: 6px; } .lang-switch { margin-left: auto; } }
 
 .demo-banner { background: var(--gold-hi); color: var(--forest); text-align: center; font-size: .86rem; font-weight: 600; padding: 8px 16px; }
+@media (max-width: 480px) {
+  .topbar-inner { gap: 8px; }
+  .topbar .logo { gap: 9px; }
+  .topbar .sphere { width: 32px; height: 32px; }
+  .topbar .wordmark { font-size: 1.15rem; }
+  .topbar .wordmark small { font-size: .5rem; letter-spacing: .22em; }
+  .lang-btn { padding: 4px; }
+  .lang-switch { padding: 2px; gap: 0; }
+  .menu-btn { padding: 3px 9px; font-size: 1.15rem; }
+}
+@media (max-width: 359px) { .topbar .wordmark { display: none; } }

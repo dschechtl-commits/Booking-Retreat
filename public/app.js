@@ -42,8 +42,11 @@ const FLAGS = {
   nl: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#21468B"/><rect width="30" height="13.33" fill="#fff"/><rect width="30" height="6.67" fill="#AE1C28"/></svg>',
   en: '<svg viewBox="0 0 60 40" aria-hidden="true"><clipPath id="fl-uk"><rect width="60" height="40"/></clipPath><g clip-path="url(#fl-uk)"><rect width="60" height="40" fill="#012169"/><path d="M0,0 60,40M60,0 0,40" stroke="#fff" stroke-width="8"/><path d="M0,0 60,40M60,0 0,40" stroke="#C8102E" stroke-width="3"/><path d="M30,0V40M0,20H60" stroke="#fff" stroke-width="12"/><path d="M30,0V40M0,20H60" stroke="#C8102E" stroke-width="7"/></g></svg>',
   fr: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#fff"/><rect width="10" height="20" fill="#002654"/><rect x="20" width="10" height="20" fill="#CE1126"/></svg>',
+  es: '<svg viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#AA151B"/><rect y="5" width="30" height="10" fill="#F1BF00"/></svg>',
 };
-const LANG_NAMES = { nl: 'Nederlands', en: 'English', fr: 'Français' };
+const LANG_NAMES = { nl: 'Nederlands', en: 'English', fr: 'Français', es: 'Español' };
+// Taal van de site → waarde in het taalfilter van events.
+const EVENT_LANG = { nl: 'Nederlands', en: 'Engels', fr: 'Frans', es: 'Spaans' };
 
 function renderLangSwitch() {
   $('#lang-switch').innerHTML = I18N_LANGS.map((l) => `<button type="button" class="lang-btn ${l === state.lang ? 'active' : ''}" data-lang="${l}" lang="${l}" aria-pressed="${l === state.lang}" title="${LANG_NAMES[l]}"><span class="flag">${FLAGS[l]}</span><span class="code">${l.toUpperCase()}</span></button>`).join('');
@@ -349,7 +352,7 @@ async function viewHome() {
       <a class="type-pill" href="#/retreats?level=Beginner">${t('quick.beginners')}</a>
       <a class="type-pill" href="#/retreats?level=Gevorderd">${t('quick.pros')}</a>
       <a class="type-pill" href="#/retreats?flexible=1">${t('tag.freeCancel')}</a>
-      <a class="type-pill" href="#/retreats?language=${state.lang === 'fr' ? 'Frans' : state.lang === 'en' ? 'Engels' : 'Nederlands'}">${t('quick.ownLang')}</a>
+      <a class="type-pill" href="#/retreats?language=${EVENT_LANG[state.lang]}">${t('quick.ownLang')}</a>
     </div>
   </section>
 
@@ -601,7 +604,7 @@ function viewHostForm(existing) {
     $('#log').onclick = () => openAuth('login');
     return;
   }
-  const r = existing || { region: 'Europa', amenities: [], startDates: [], packages: [{ name: t('host.defaultPkg'), price: '' }], depositPercent: 20, cancellation: 'flexibel', level: 'Alle niveaus', diets: [], languages: [{ nl: 'Nederlands', en: 'Engels', fr: 'Frans' }[state.lang]], instantBooking: true, translations: {} };
+  const r = existing || { region: 'Europa', amenities: [], startDates: [], packages: [{ name: t('host.defaultPkg'), price: '' }], depositPercent: 20, cancellation: 'flexibel', level: 'Alle niveaus', diets: [], languages: [EVENT_LANG[state.lang]], instantBooking: true, translations: {} };
   const trs = r.translations || {};
   let dates = [...(r.startDates || [])].filter((d) => d >= today());
   const { countries, types, levels, diets, languages, cancellation } = state.meta;
@@ -632,7 +635,7 @@ function viewHostForm(existing) {
 
       <fieldset class="panel"><legend>${t('host.translations')}</legend>
         <p class="hint" style="margin-top:0">${t('host.translationsHint')}</p>
-        ${['en', 'fr'].map((l) => `<div class="tr-block"><div class="tr-head"><span class="flag">${FLAGS[l]}</span> ${LANG_NAMES[l]}</div>
+        ${I18N_LANGS.filter((l) => l !== 'nl').map((l) => `<div class="tr-block"><div class="tr-head"><span class="flag">${FLAGS[l]}</span> ${LANG_NAMES[l]}</div>
           <div class="field"><label for="h-t-${l}">${t('host.title')}</label><input id="h-t-${l}" data-tr="${l}" data-f="title" maxlength="120" value="${esc(trs[l] && trs[l].title)}"></div>
           <div class="field"><label for="h-d-${l}">${t('host.description')}</label><textarea id="h-d-${l}" data-tr="${l}" data-f="description" maxlength="3000" style="min-height:90px">${esc(trs[l] && trs[l].description)}</textarea></div></div>`).join('')}
       </fieldset>

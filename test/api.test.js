@@ -153,6 +153,7 @@ test('meertalige foutmeldingen en noindex', async () => {
   assert.equal((await login('nl')).error, 'Onjuist e-mailadres of wachtwoord');
   assert.equal((await login('en')).error, 'Incorrect email address or password');
   assert.equal((await login('fr')).error, 'Adresse e-mail ou mot de passe incorrect');
+  assert.equal((await login('es')).error, 'Correo electrónico o contraseña incorrectos');
   const viaHeader = await fetch(base + '/api/retreats/bestaat-niet', { headers: { 'Accept-Language': 'en-GB,en;q=0.9' } });
   assert.equal((await viaHeader.json()).error, 'Event not found');
   // validatielijst wordt per onderdeel vertaald

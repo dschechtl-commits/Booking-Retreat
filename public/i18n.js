@@ -1,6 +1,6 @@
 'use strict';
-/* Vertalingen voor NEWNEI Events. Nieuwe taal toevoegen: code in I18N_LANGS + I18N_LOCALES,
-   een blok in I18N_STRINGS en de waarden in I18N_VALUES. Ontbrekende teksten vallen terug op Nederlands. */
+/* Vertalingen voor NEWNEI Events. Nieuwe taal toevoegen: maak een bestand zoals i18n-es.js
+   (taalcode, locale, I18N_STRINGS-blok en I18N_VALUES) en laad het in index.html. Ontbrekende teksten vallen terug op Nederlands. */
 const I18N_LANGS = ['nl', 'en', 'fr'];
 const I18N_LOCALES = { nl: 'nl-NL', en: 'en-GB', fr: 'fr-FR' };
 
@@ -83,7 +83,7 @@ const I18N_STRINGS = {
     'host.basics': 'Basisgegevens', 'host.title': 'Titel', 'host.titlePh': 'Bijv. Thuiskomen in je hart – retreat aan zee', 'host.region': 'Regio', 'host.city': 'Plaats', 'host.cityPh': 'Bijv. Ericeira',
     'host.description': 'Beschrijving', 'host.descriptionPh': 'Waar gaat je event over en voor wie is het?', 'host.included': 'Wat is inbegrepen?', 'host.includedPh': 'Ontbijt, Yogamat, Transfer vanaf luchthaven',
     'host.commaHint': 'Scheid met komma’s', 'host.languages': 'Talen', 'host.photo': 'Foto-URL', 'host.photoHint': 'Link naar een foto van je locatie (https). Zonder foto tonen we een illustratie.',
-    'host.translations': 'Vertalingen', 'host.translationsHint': 'Optioneel: geef een Engelse en/of Franse titel en beschrijving, dan zien bezoekers in die taal je event in hun eigen taal.',
+    'host.translations': 'Vertalingen', 'host.translationsHint': 'Optioneel: geef een titel en beschrijving in andere talen, dan zien bezoekers je event in hun eigen taal.',
     'host.programLegend': 'Programma & facilitator', 'host.itinHint': 'Eén activiteit per regel, eventueel beginnend met een tijd', 'host.facName': 'Naam facilitator', 'host.aboutYou': 'Over jou', 'host.aboutYouPh': 'Ervaring, opleiding…',
     'host.venueLegend': 'Locatie, tickets & eten', 'host.venue': 'Locatie of verblijf', 'host.venuePh': 'Zaal, verblijf, faciliteiten, bereikbaarheid',
     'host.options': 'Tickets of kameropties & prijzen (per persoon, heel event)', 'host.addOption': 'Optie toevoegen', 'host.foodPh': 'Welke maaltijden zijn inbegrepen?', 'host.diets': 'Dieetopties',
@@ -189,7 +189,7 @@ const I18N_STRINGS = {
     'host.basics': 'Basic details', 'host.title': 'Title', 'host.titlePh': 'E.g. Coming home to your heart – retreat by the sea', 'host.region': 'Region', 'host.city': 'City', 'host.cityPh': 'E.g. Ericeira',
     'host.description': 'Description', 'host.descriptionPh': 'What is your event about and who is it for?', 'host.included': 'What is included?', 'host.includedPh': 'Breakfast, yoga mat, airport transfer',
     'host.commaHint': 'Separate with commas', 'host.languages': 'Languages', 'host.photo': 'Photo URL', 'host.photoHint': 'Link to a photo of your venue (https). Without a photo we show an illustration.',
-    'host.translations': 'Translations', 'host.translationsHint': 'Optional: add an English and/or French title and description, so visitors see your event in their own language.',
+    'host.translations': 'Translations', 'host.translationsHint': 'Optional: add a title and description in other languages, so visitors see your event in their own language.',
     'host.programLegend': 'Programme & facilitator', 'host.itinHint': 'One activity per line, optionally starting with a time', 'host.facName': 'Facilitator name', 'host.aboutYou': 'About you', 'host.aboutYouPh': 'Experience, training…',
     'host.venueLegend': 'Venue, tickets & food', 'host.venue': 'Venue or accommodation', 'host.venuePh': 'Hall, accommodation, facilities, how to get there',
     'host.options': 'Tickets or room options & prices (per person, whole event)', 'host.addOption': 'Add option', 'host.foodPh': 'Which meals are included?', 'host.diets': 'Dietary options',
@@ -295,7 +295,7 @@ const I18N_STRINGS = {
     'host.basics': 'Informations de base', 'host.title': 'Titre', 'host.titlePh': 'Ex. Revenir à son cœur – retraite au bord de la mer', 'host.region': 'Région', 'host.city': 'Ville', 'host.cityPh': 'Ex. Ericeira',
     'host.description': 'Description', 'host.descriptionPh': 'De quoi parle votre événement et à qui s’adresse-t-il ?', 'host.included': 'Qu’est-ce qui est inclus ?', 'host.includedPh': 'Petit-déjeuner, tapis de yoga, transfert aéroport',
     'host.commaHint': 'Séparez par des virgules', 'host.languages': 'Langues', 'host.photo': 'URL de la photo', 'host.photoHint': 'Lien vers une photo de votre lieu (https). Sans photo, nous affichons une illustration.',
-    'host.translations': 'Traductions', 'host.translationsHint': 'Facultatif : ajoutez un titre et une description en anglais et/ou en français pour que les visiteurs voient votre événement dans leur langue.',
+    'host.translations': 'Traductions', 'host.translationsHint': 'Facultatif : ajoutez un titre et une description dans d’autres langues pour que les visiteurs voient votre événement dans leur langue.',
     'host.programLegend': 'Programme et facilitateur', 'host.itinHint': 'Une activité par ligne, éventuellement précédée d’une heure', 'host.facName': 'Nom du facilitateur', 'host.aboutYou': 'À propos de vous', 'host.aboutYouPh': 'Expérience, formation…',
     'host.venueLegend': 'Lieu, billets et repas', 'host.venue': 'Lieu ou hébergement', 'host.venuePh': 'Salle, hébergement, équipements, accès',
     'host.options': 'Billets ou chambres et prix (par personne, tout l’événement)', 'host.addOption': 'Ajouter une option', 'host.foodPh': 'Quels repas sont inclus ?', 'host.diets': 'Options alimentaires',
