@@ -35,6 +35,16 @@ De site is beschikbaar in het **Nederlands, Engels en Frans** (talenkiezer met v
 
 De site vraagt zoekmachines en AI-crawlers om niets te indexeren: `robots.txt` (ook GPTBot, ClaudeBot, Google-Extended, CCBot e.d.), een `robots`-metatag en een `X-Robots-Tag`-header op elke response.
 
+## Snel delen via Vercel (demo)
+
+Voor een demo om te laten zien is [Vercel](https://vercel.com) het snelst; `vercel.json` en `api/index.js` staan klaar.
+
+1. Ga naar vercel.com → **Add New… → Project** en importeer de GitHub-repository `Booking-Retreat`.
+2. Laat alle instellingen staan zoals ze zijn. Wil je een wachtwoord? Voeg dan bij **Environment Variables** `SITE_PASSWORD` toe.
+3. Klik op **Deploy**. Je krijgt een link als `https://booking-retreat.vercel.app` om te delen.
+
+Let op: Vercel heeft geen vaste schijf. Accounts en boekingen staan tijdelijk in het geheugen en worden gewist als Vercel de functie opnieuw opstart (na een tijd zonder bezoek of na een nieuwe deploy). Bezoekers zien daarom bovenaan een demo-melding; zet `DEMO_MODE=false` om die te verbergen. Voor echt gebruik: zie Render hieronder.
+
 ## Online zetten (deelbare link, niet vindbaar)
 
 De site draait op elke Node-host. Met [Render](https://render.com) gaat het met de meegeleverde `render.yaml`:

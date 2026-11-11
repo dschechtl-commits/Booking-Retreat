@@ -33,6 +33,7 @@ function setLang(lang) {
   state.lang = lang;
   try { localStorage.setItem('lang', lang); } catch {}
   applyStatic();
+  renderDemoBanner();
   renderAuthSlot();
   router();
 }
@@ -58,6 +59,14 @@ function applyStatic() {
   $$('[data-i18n]').forEach((el) => (el.textContent = t(el.dataset.i18n)));
   $('#menu-btn').setAttribute('aria-label', t('nav.menu'));
   renderLangSwitch();
+}
+
+// Demo-melding (alleen als de server in demomodus draait, bijv. op Vercel).
+function renderDemoBanner() {
+  let el = $('#demo-banner');
+  if (!state.meta || !state.meta.demo) { if (el) el.remove(); return; }
+  if (!el) { el = document.createElement('div'); el.id = 'demo-banner'; el.className = 'demo-banner'; document.body.prepend(el); }
+  el.textContent = t('demo.banner');
 }
 
 // ---------- helpers ----------
@@ -873,6 +882,7 @@ async function init() {
   const [{ user }, meta] = await Promise.all([api('/api/auth/me'), api('/api/meta')]);
   state.user = user;
   state.meta = meta;
+  renderDemoBanner();
   renderAuthSlot();
   window.addEventListener('hashchange', router);
   router();

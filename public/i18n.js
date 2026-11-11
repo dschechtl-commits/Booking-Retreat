@@ -6,6 +6,7 @@ const I18N_LOCALES = { nl: 'nl-NL', en: 'en-GB', fr: 'fr-FR' };
 
 const I18N_STRINGS = {
   nl: {
+    'demo.banner': 'Demoversie: voel je vrij om rond te kijken en te testen. Accounts en boekingen worden af en toe gewist.',
     'meta.title': 'NEWNEI® Events – Retreats & events door NEWNEI-facilitators',
     'meta.description': 'Ontdek en boek NEWNEI-retreats, experience days en workshops in Europa en Azië, georganiseerd door facilitators die de NEWNEI-opleiding hebben gevolgd.',
     'nav.events': 'Alle events', 'nav.europe': 'Europa', 'nav.asia': 'Azië', 'nav.facilitators': 'Voor facilitators', 'nav.menu': 'Menu',
@@ -111,6 +112,7 @@ const I18N_STRINGS = {
   },
 
   en: {
+    'demo.banner': 'Demo version: feel free to look around and test. Accounts and bookings are reset from time to time.',
     'meta.title': 'NEWNEI® Events – Retreats & events by NEWNEI facilitators',
     'meta.description': 'Discover and book NEWNEI retreats, experience days and workshops in Europe and Asia, organised by facilitators who completed the NEWNEI training.',
     'nav.events': 'All events', 'nav.europe': 'Europe', 'nav.asia': 'Asia', 'nav.facilitators': 'For facilitators', 'nav.menu': 'Menu',
@@ -216,6 +218,7 @@ const I18N_STRINGS = {
   },
 
   fr: {
+    'demo.banner': 'Version de démonstration : explorez et testez librement. Les comptes et réservations sont réinitialisés de temps en temps.',
     'meta.title': 'NEWNEI® Events – Retraites et événements par des facilitateurs NEWNEI',
     'meta.description': 'Découvrez et réservez des retraites, journées Experience et ateliers NEWNEI en Europe et en Asie, organisés par des facilitateurs formés à NEWNEI.',
     'nav.events': 'Tous les événements', 'nav.europe': 'Europe', 'nav.asia': 'Asie', 'nav.facilitators': 'Pour les facilitateurs', 'nav.menu': 'Menu',

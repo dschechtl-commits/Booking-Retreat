@@ -361,3 +361,5 @@ details.host-bookings summary { cursor: pointer; font-weight: 600; color: var(--
 .tr-block { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 16px 16px 2px; margin-bottom: 14px; }
 .tr-head { display: flex; align-items: center; gap: 8px; font-weight: 600; margin-bottom: 12px; }
 @media (max-width: 900px) { .topbar-inner { gap: 10px; } .lang-btn .code { display: none; } .lang-btn { padding: 6px; } .lang-switch { margin-left: auto; } }
+
+.demo-banner { background: var(--gold-hi); color: var(--forest); text-align: center; font-size: .86rem; font-weight: 600; padding: 8px 16px; }
